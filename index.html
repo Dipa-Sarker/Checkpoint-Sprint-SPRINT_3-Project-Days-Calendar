@@ -3,7 +3,6 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script type="module" src="common.mjs"></script>
     <script type="module" src="web.mjs"></script>
     <title>Days Calendar</title>
   </head>
@@ -18,7 +17,7 @@
       <button type="button" id="previous-month-btn">Previous</button>
 
       <!-- "Jump to" controls -->
-      <label for="month-select">Months</label>
+      <label for="month-select">Month</label>
       <select name="" id="month-select">
         <option value="0">January</option>
         <option value="1">February</option>
@@ -39,6 +38,8 @@
       <!-- No value: render() fills it in from state.year on page load. todo-->
       <input type="number" id="year-input" />
 
+      <button type="button" id="next-month-btn">Next</button>
+
       <!-- SS grid to format later todo-->
       <div id="weekday-headings">
         <div>Sunday</div>
@@ -49,8 +50,6 @@
         <div>Friday</div>
         <div>Saturday</div>
       </div>
-
-      <button type="button" id="next-month-btn">Next</button>
 
       <!-- EMPTY: render() to clear this and format to a grid of 7 days each row todo. -->
       <div id="calendar-grid"></div>
