@@ -1,4 +1,9 @@
 //=============================================================
+// IMPORTS
+//=============================================================
+import { getBlanksBefore, getDaysInMonth } from "./calendar.mjs";
+
+//=============================================================
 // MONTH NAMES: lookup table from month number (0–11) to name
 //=============================================================
 
@@ -22,6 +27,7 @@ const monthNames = [
 const monthYearHeading = document.getElementById("month-year-heading");
 const monthSelect = document.getElementById("month-select");
 const yearInput = document.getElementById("year-input");
+const calendarGrid = document.getElementById("calendar-grid");
 //=============================================================
 // STATE
 //=============================================================
@@ -54,6 +60,29 @@ function render() {
   // 3. Year box: show the year from state
   //    Also "resets" the box if the user typed something invalid
   yearInput.value = state.year;
+
+  // 4. Calendar grid: rebuild it for the month in state.
+  // empty the grid
+  calendarGrid.replaceChildren();
+
+  // Get the two numbers for this month from calendar.mjs.
+  const blanksBefore = getBlanksBefore(state.year, state.month);
+  const daysInMonth = getDaysInMonth(state.year, state.month);
+
+  // Add one blank box per empty slot before the 1st
+  for (let i = 0; i < blanksBefore; i++) {
+    const blankGridBox = document.createElement("div");
+    blankGridBox.classList.add("blank-grid-box");
+    calendarGrid.append(blankGridBox);
+  }
+
+  // Add one numbered box per day
+  for (let dayNumber = 1; dayNumber <= daysInMonth; dayNumber++) {
+    const dayGridBox = document.createElement("div");
+    dayGridBox.classList.add("day-grid-box");
+    dayGridBox.textContent = dayNumber;
+    calendarGrid.append(dayGridBox);
+  }
 }
 
 //=============================================================
