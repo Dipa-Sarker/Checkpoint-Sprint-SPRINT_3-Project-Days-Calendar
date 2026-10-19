@@ -28,6 +28,9 @@ const monthYearHeading = document.getElementById("month-year-heading");
 const monthSelect = document.getElementById("month-select");
 const yearInput = document.getElementById("year-input");
 const calendarGrid = document.getElementById("calendar-grid");
+const previousMonthBtn = document.getElementById("previous-month-btn");
+const nextMonthBtn = document.getElementById("next-month-btn");
+
 //=============================================================
 // STATE
 //=============================================================
@@ -86,8 +89,41 @@ function render() {
 }
 
 //=============================================================
+// ACTIONS
+//=============================================================
+
+function goToPreviousMonth() {
+  //start from the current values in state
+  let previousMonth = state.month - 1;
+  let previousYear = state.year;
+
+  if (previousMonth < 0) {
+    previousMonth = 11;
+    previousYear = previousYear - 1;
+  }
+
+  setState({ month: previousMonth, year: previousYear });
+}
+
+function goToNextMonth() {
+  //start from the current values in state
+  let nextMonth = state.month + 1;
+  let nextYear = state.year;
+
+  if (nextMonth > 11) {
+    nextMonth = 0;
+    nextYear = nextYear + 1;
+  }
+
+  setState({ month: nextMonth, year: nextYear });
+}
+
+//=============================================================
 // EVENT LISTENERS
 //=============================================================
+
+previousMonthBtn.addEventListener("click", goToPreviousMonth);
+nextMonthBtn.addEventListener("click", goToNextMonth);
 
 //=============================================================
 // INITIALISATION
