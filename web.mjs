@@ -118,12 +118,37 @@ function goToNextMonth() {
   setState({ month: nextMonth, year: nextYear });
 }
 
+function handleMonthChange() {
+  setState({ month: Number(monthSelect.value) });
+}
+
+// Year box: jump to the typed year, but only if it's a valid year.
+function handleYearChange() {
+  // Read what was typed (text) and convert it to a number and save
+  const newYearInput = Number(yearInput.value);
+
+  // Valid = a whole number from 100 to 9999.
+  // (Years 0–99 are avoided because new Date() treats them as 1900–1999.)
+  if (
+    Number.isInteger(newYearInput) &&
+    Number(newYearInput) >= 100 &&
+    Number(newYearInput) <= 9999
+  ) {
+    setState({ year: newYearInput });
+  } else {
+    render();
+    alert("Please enter a valid year between 100 and 9999.");
+  }
+}
+
 //=============================================================
 // EVENT LISTENERS
 //=============================================================
 
 previousMonthBtn.addEventListener("click", goToPreviousMonth);
 nextMonthBtn.addEventListener("click", goToNextMonth);
+monthSelect.addEventListener("change", handleMonthChange);
+yearInput.addEventListener("change", handleYearChange);
 
 //=============================================================
 // INITIALISATION
