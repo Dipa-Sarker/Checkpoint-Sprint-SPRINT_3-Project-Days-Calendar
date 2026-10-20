@@ -12,3 +12,9 @@ export function getDaysInMonth(year, month) {
   const lastOfMonth = new Date(year, month + 1, 0);
   return lastOfMonth.getDate();
 }
+
+export function getBlanksAfter(year, month) {
+  //returns how many blank boxes go after end of the month
+  const lastOfMonth = new Date(year, month + 1, 0);
+  return 6 - lastOfMonth.getDay();
+}

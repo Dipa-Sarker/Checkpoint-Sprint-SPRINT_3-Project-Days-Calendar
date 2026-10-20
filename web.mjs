@@ -1,7 +1,11 @@
 //=============================================================
 // IMPORTS
 //=============================================================
-import { getBlanksBefore, getDaysInMonth } from "./calendar.mjs";
+import {
+  getBlanksBefore,
+  getDaysInMonth,
+  getBlanksAfter,
+} from "./calendar.mjs";
 
 //=============================================================
 // MONTH NAMES: lookup table from month number (0–11) to name
@@ -70,6 +74,7 @@ function render() {
 
   // Get the two numbers for this month from calendar.mjs.
   const blanksBefore = getBlanksBefore(state.year, state.month);
+  const blanksAfter = getBlanksAfter(state.year, state.month);
   const daysInMonth = getDaysInMonth(state.year, state.month);
 
   // Add one blank box per empty slot before the 1st
@@ -85,6 +90,13 @@ function render() {
     dayGridBox.classList.add("day-grid-box");
     dayGridBox.textContent = dayNumber;
     calendarGrid.append(dayGridBox);
+  }
+
+  // Add one blank box per empty slot after last day
+  for (let i = 0; i < blanksAfter; i++) {
+    const blankGridBox = document.createElement("div");
+    blankGridBox.classList.add("blank-grid-box");
+    calendarGrid.append(blankGridBox);
   }
 }
 
