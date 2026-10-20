@@ -1,5 +1,4 @@
-
- // The month names are shared by the website and the iCal generator.
+// The month names are shared by the website and the iCal generator.
 export const monthNames = [
   "January",
   "February",
@@ -31,6 +30,13 @@ function getWeekdayNumber(dayName) {
   return weekdays.indexOf(dayName);
 }
 
+// changing how date is created, since with new Date(), years 0-99 is treated as 1900-1999
+export function createDate(year, monthIndex, day) {
+  const date = new Date(2026, 9, 26);
+  date.setFullYear(year, monthIndex, day);
+  return date;
+}
+
 // Calculate the date of one commemorative day in a given year.
 export function getCommemorativeDate(day, year) {
   // Find the month number.
@@ -45,7 +51,7 @@ export function getCommemorativeDate(day, year) {
   }
 
   // Find the first day of the month.
-  const firstDay = new Date(year, monthIndex, 1);
+  const firstDay = createDate(year, monthIndex, 1);
 
   // Find the weekday of the first day.
   const firstWeekday = firstDay.getDay();
@@ -61,17 +67,16 @@ export function getCommemorativeDate(day, year) {
   if (day.occurrence === "last") {
     // The day before the first day of the next month
     // is the last day of this month.
-    const lastDay = new Date(year, monthIndex + 1, 0);
+    const lastDay = createDate(year, monthIndex + 1, 0);
 
     // Start from the last day of the month.
     const lastDate = lastDay.getDate();
     const lastWeekday = lastDay.getDay();
 
     // Count backwards to find the required weekday.
-    const daysToSubtract =
-      (lastWeekday - weekdayNumber + 7) % 7;
+    const daysToSubtract = (lastWeekday - weekdayNumber + 7) % 7;
 
-    return new Date(year, monthIndex, lastDate - daysToSubtract);
+    return createDate(year, monthIndex, lastDate - daysToSubtract);
   }
 
   // Handle first, second and third occurrences.
@@ -89,10 +94,9 @@ export function getCommemorativeDate(day, year) {
   }
 
   // Each occurrence is seven days after the previous one.
-  const dateNumber =
-    firstOccurrence + (occurrenceNumber - 1) * 7;
+  const dateNumber = firstOccurrence + (occurrenceNumber - 1) * 7;
 
-  return new Date(year, monthIndex, dateNumber);
+  return createDate(year, monthIndex, dateNumber);
 }
 
 /*
@@ -103,11 +107,7 @@ export function getCommemorativeDate(day, year) {
  * monthIndex: the month number, from 0 (January) to 11 (December)
  */
 
-export function getCommemorativeDaysForMonth(
-  daysData,
-  year,
-  monthIndex
-) {
+export function getCommemorativeDaysForMonth(daysData, year, monthIndex) {
   // Create an empty array to store the matching commemorative days.
   const result = [];
 
@@ -134,4 +134,3 @@ export function getCommemorativeDaysForMonth(
   // Return all commemorative days found in the requested month.
   return result;
 }
-

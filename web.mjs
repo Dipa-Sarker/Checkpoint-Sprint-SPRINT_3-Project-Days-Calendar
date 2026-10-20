@@ -138,13 +138,12 @@ function handleYearChange() {
   // Read what was typed (text) and convert it to a number and save
   const newYear = Number(yearInput.value);
 
-  // Valid = a whole number from 100 to 9999.
-  // (Years 0–99 are avoided because new Date() treats them as 1900–1999.)
-  if (Number.isInteger(newYear) && newYear >= 100 && newYear <= 9999) {
+  // Valid = a whole number from 1 to 9999.
+  if (Number.isInteger(newYear) && newYear >= 1 && newYear <= 9999) {
     setState({ year: newYear });
   } else {
     render();
-    alert("Please enter a valid year between 100 and 9999.");
+    alert("Please enter a valid year between 1 and 9999.");
   }
 }
 

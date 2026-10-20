@@ -56,3 +56,13 @@ describe("getDaysInMonth()", () => {
     assert.strictEqual(getDaysInMonth(2025, 1), 28);
   });
 });
+
+//--------------------------------------
+// testing small years under 100 are not treated as 1900s
+//--------------------------------------
+
+describe("years below 100", () => {
+  test("Jan 1st in year 99 is a Thu - in 1999 it was a Fri", () => {
+    assert.strictEqual(getBlanksBefore(99, 0), 4);
+  });
+});
