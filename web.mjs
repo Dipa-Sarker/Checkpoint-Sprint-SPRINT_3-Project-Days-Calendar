@@ -26,8 +26,8 @@ const nextMonthBtn = document.getElementById("next-month-btn");
 
 // Starts as today's month and year, only changed with setState()
 let state = {
-  month: new Date().getMonth(), // 0–11 - Today: 9 (October)
-  year: new Date().getFullYear(), // 4-digit year - Today: 2026
+  month: new Date().getMonth(), // 0–11 - Eg: 9  = October
+  year: new Date().getFullYear(), // 4-digit year - Eg: 2026
 };
 
 //=============================================================
@@ -142,8 +142,8 @@ function handleYearChange() {
   // (Years 0–99 are avoided because new Date() treats them as 1900–1999.)
   if (
     Number.isInteger(newYearInput) &&
-    Number(newYearInput) >= 100 &&
-    Number(newYearInput) <= 9999
+    newYearInput >= 100 &&
+    newYearInput <= 9999
   ) {
     setState({ year: newYearInput });
   } else {
