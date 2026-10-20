@@ -1,4 +1,9 @@
 //=============================================================
+// IMPORTS
+//=============================================================
+import { getBlanksBefore, getDaysInMonth } from "./calendar.mjs";
+
+//=============================================================
 // MONTH NAMES: lookup table from month number (0–11) to name
 //=============================================================
 
@@ -22,6 +27,10 @@ const monthNames = [
 const monthYearHeading = document.getElementById("month-year-heading");
 const monthSelect = document.getElementById("month-select");
 const yearInput = document.getElementById("year-input");
+const calendarGrid = document.getElementById("calendar-grid");
+const previousMonthBtn = document.getElementById("previous-month-btn");
+const nextMonthBtn = document.getElementById("next-month-btn");
+
 //=============================================================
 // STATE
 //=============================================================
@@ -54,11 +63,92 @@ function render() {
   // 3. Year box: show the year from state
   //    Also "resets" the box if the user typed something invalid
   yearInput.value = state.year;
+
+  // 4. Calendar grid: rebuild it for the month in state.
+  // empty the grid
+  calendarGrid.replaceChildren();
+
+  // Get the two numbers for this month from calendar.mjs.
+  const blanksBefore = getBlanksBefore(state.year, state.month);
+  const daysInMonth = getDaysInMonth(state.year, state.month);
+
+  // Add one blank box per empty slot before the 1st
+  for (let i = 0; i < blanksBefore; i++) {
+    const blankGridBox = document.createElement("div");
+    blankGridBox.classList.add("blank-grid-box");
+    calendarGrid.append(blankGridBox);
+  }
+
+  // Add one numbered box per day
+  for (let dayNumber = 1; dayNumber <= daysInMonth; dayNumber++) {
+    const dayGridBox = document.createElement("div");
+    dayGridBox.classList.add("day-grid-box");
+    dayGridBox.textContent = dayNumber;
+    calendarGrid.append(dayGridBox);
+  }
+}
+
+//=============================================================
+// ACTIONS
+//=============================================================
+
+function goToPreviousMonth() {
+  //start from the current values in state
+  let previousMonth = state.month - 1;
+  let previousYear = state.year;
+
+  if (previousMonth < 0) {
+    previousMonth = 11;
+    previousYear = previousYear - 1;
+  }
+
+  setState({ month: previousMonth, year: previousYear });
+}
+
+function goToNextMonth() {
+  //start from the current values in state
+  let nextMonth = state.month + 1;
+  let nextYear = state.year;
+
+  if (nextMonth > 11) {
+    nextMonth = 0;
+    nextYear = nextYear + 1;
+  }
+
+  setState({ month: nextMonth, year: nextYear });
+}
+
+function handleMonthChange() {
+  setState({ month: Number(monthSelect.value) });
+}
+
+// Year box: jump to the typed year, but only if it's a valid year.
+function handleYearChange() {
+  // Read what was typed (text) and convert it to a number and save
+  const newYearInput = Number(yearInput.value);
+
+  // Valid = a whole number from 100 to 9999.
+  // (Years 0–99 are avoided because new Date() treats them as 1900–1999.)
+  if (
+    Number.isInteger(newYearInput) &&
+    Number(newYearInput) >= 100 &&
+    Number(newYearInput) <= 9999
+  ) {
+    setState({ year: newYearInput });
+  } else {
+    render();
+    alert("Please enter a valid year between 100 and 9999.");
+  }
 }
 
 //=============================================================
 // EVENT LISTENERS
 //=============================================================
+
+previousMonthBtn.addEventListener("click", goToPreviousMonth);
+nextMonthBtn.addEventListener("click", goToNextMonth);
+monthSelect.addEventListener("change", handleMonthChange);
+yearInput.addEventListener("change", handleYearChange);
 
 //=============================================================
 // INITIALISATION
