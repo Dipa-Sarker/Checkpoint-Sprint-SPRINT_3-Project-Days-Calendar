@@ -24,7 +24,7 @@ test("Ada Lovelace Day falls on the second Tuesday of October", () => {
 });
 
 
-// Test that Ada Lovelace Day and World Lemur Day fall on the last Friday of October in different years.
+// Test that Ada Lovelace Day and World Lemur Day fall on their expected dates in different years.
 test("October 2024 returns Ada Lovelace Day and World Lemur Day", () => {
   
   const result = getCommemorativeDaysForMonth(daysData, 2024, 9);
