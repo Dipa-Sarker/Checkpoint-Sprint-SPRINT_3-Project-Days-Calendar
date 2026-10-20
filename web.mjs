@@ -7,24 +7,9 @@ import {
   getBlanksAfter,
 } from "./calendar.mjs";
 
-//=============================================================
-// MONTH NAMES: lookup table from month number (0–11) to name
-//=============================================================
+import { getCommemorativeDaysForMonth, monthNames } from "./common.mjs";
+import daysData from "./days.json" with { type: "json" };
 
-const monthNames = [
-  "January", // 0
-  "February", // 1
-  "March", // 2
-  "April", // 3
-  "May", // 4
-  "June", // 5
-  "July", // 6
-  "August", // 7
-  "September", // 8
-  "October", // 9
-  "November", // 10
-  "December", // 11
-];
 //=============================================================
 // DOM elements
 //=============================================================
@@ -77,6 +62,12 @@ function render() {
   const blanksAfter = getBlanksAfter(state.year, state.month);
   const daysInMonth = getDaysInMonth(state.year, state.month);
 
+  const commDaysList = getCommemorativeDaysForMonth(
+    daysData,
+    state.year,
+    state.month,
+  );
+
   // Add one blank box per empty slot before the 1st
   for (let i = 0; i < blanksBefore; i++) {
     const blankGridBox = document.createElement("div");
@@ -89,6 +80,14 @@ function render() {
     const dayGridBox = document.createElement("div");
     dayGridBox.classList.add("day-grid-box");
     dayGridBox.textContent = dayNumber;
+    //loop through that list, and for each match, append an element with the day's name
+    for (const commDay of commDaysList) {
+      if (commDay.day === dayNumber) {
+        const dayLabelPara = document.createElement("p");
+        dayLabelPara.textContent = commDay.name;
+        dayGridBox.append(dayLabelPara);
+      }
+    }
     calendarGrid.append(dayGridBox);
   }
 
