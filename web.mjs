@@ -57,7 +57,7 @@ function render() {
   // empty the grid
   calendarGrid.replaceChildren();
 
-  // Get the two numbers for this month from calendar.mjs.
+  // Get the three numbers for this month from calendar.mjs.
   const blanksBefore = getBlanksBefore(state.year, state.month);
   const blanksAfter = getBlanksAfter(state.year, state.month);
   const daysInMonth = getDaysInMonth(state.year, state.month);

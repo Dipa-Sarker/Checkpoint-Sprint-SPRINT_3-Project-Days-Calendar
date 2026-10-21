@@ -1,5 +1,5 @@
 // Import the function that calculates the date of a commemorative day.
-import { getCommemorativeDate } from "./common.mjs";
+import { getCommemorativeDate, createDate } from "./common.mjs";
 
 // Import functions for reading and writing files.
 import { readFile, writeFile } from "node:fs/promises";
@@ -23,10 +23,10 @@ function formatICalDate(date) {
 function createICalEvent(day, year, date) {
   const startDate = formatICalDate(date);
 
-  const nextDay = new Date(
+  const nextDay = createDate(
     date.getFullYear(),
     date.getMonth(),
-    date.getDate() + 1
+    date.getDate() + 1,
   );
 
   const endDate = formatICalDate(nextDay);
