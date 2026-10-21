@@ -2,10 +2,20 @@
 #calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
+  margin-top: 20px;
 }
 
 .blank-grid-box,
 .day-grid-box {
   border: 1px solid lightgrey;
   min-height: 3rem;
+}
+
+h1,
+h2 {
+  text-align: center;
+}
+
+footer {
+  margin-top: 30px;
 }

@@ -90,7 +90,7 @@ test("World Lemur Day falls on 31 October 2025", () => {
   assert.equal(date.getDay(), 5); // Friday
 });
 
-// test an arbitrary 4th occurrence
+// Test an arbitrary 4th occurrence
 // Feb 2026 starts on a Sun, so the fourth Sat is the 28th
 test("Fourth Sat of Feb 2026 is the 28th", () => {
   //made up day
