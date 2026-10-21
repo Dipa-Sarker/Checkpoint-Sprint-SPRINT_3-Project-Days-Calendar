@@ -34,23 +34,15 @@ function createICalEvent(day, year, date) {
   return [
     "BEGIN:VEVENT",
     `UID:${day.name.replaceAll(" ", "-").toLowerCase()}-${year}@days-calendar`,
-    `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "")}`,
+    `DTSTAMP:${new Date()
+      .toISOString()
+      .replace(/[-:]/g, "")
+      .replace(/\.\d{3}/, "")}`,
     `SUMMARY:${day.name}`,
     `DTSTART;VALUE=DATE:${startDate}`,
     `DTEND;VALUE=DATE:${endDate}`,
     "END:VEVENT",
   ].join("\r\n");
-}
-
-// Generate dates for every year from 2020 to 2030.
-for (let year = 2020; year <= 2030; year++) {
-  // Calculate the date of each commemorative day.
-  for (const day of daysData) {
-    const date = getCommemorativeDate(day, year);
-
-    // Display the event name and its calculated date.
-    console.log(day.name, date.toDateString());
-  }
 }
 
 // Store all generated calendar events.
@@ -81,5 +73,3 @@ await writeFile("days.ics", `${calendarContent}\r\n`, "utf8");
 
 console.log(`Generated ${events.length} calendar events.`);
 console.log("Calendar saved to days.ics");
-
-
