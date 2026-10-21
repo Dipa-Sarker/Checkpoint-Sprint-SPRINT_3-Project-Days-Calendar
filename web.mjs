@@ -1,26 +1,15 @@
 //=============================================================
 // IMPORTS
 //=============================================================
-import { getBlanksBefore, getDaysInMonth } from "./calendar.mjs";
+import {
+  getBlanksBefore,
+  getDaysInMonth,
+  getBlanksAfter,
+} from "./calendar.mjs";
 
-//=============================================================
-// MONTH NAMES: lookup table from month number (0–11) to name
-//=============================================================
+import { getCommemorativeDaysForMonth, monthNames } from "./common.mjs";
+import daysData from "./days.json" with { type: "json" };
 
-const monthNames = [
-  "January", // 0
-  "February", // 1
-  "March", // 2
-  "April", // 3
-  "May", // 4
-  "June", // 5
-  "July", // 6
-  "August", // 7
-  "September", // 8
-  "October", // 9
-  "November", // 10
-  "December", // 11
-];
 //=============================================================
 // DOM elements
 //=============================================================
@@ -37,8 +26,8 @@ const nextMonthBtn = document.getElementById("next-month-btn");
 
 // Starts as today's month and year, only changed with setState()
 let state = {
-  month: new Date().getMonth(), // 0–11 - Today: 9 (October)
-  year: new Date().getFullYear(), // 4-digit year - Today: 2026
+  month: new Date().getMonth(), // 0–11 - Eg: 9  = October
+  year: new Date().getFullYear(), // 4-digit year - Eg: 2026
 };
 
 //=============================================================
@@ -70,7 +59,14 @@ function render() {
 
   // Get the two numbers for this month from calendar.mjs.
   const blanksBefore = getBlanksBefore(state.year, state.month);
+  const blanksAfter = getBlanksAfter(state.year, state.month);
   const daysInMonth = getDaysInMonth(state.year, state.month);
+
+  const commDaysList = getCommemorativeDaysForMonth(
+    daysData,
+    state.year,
+    state.month,
+  );
 
   // Add one blank box per empty slot before the 1st
   for (let i = 0; i < blanksBefore; i++) {
@@ -84,7 +80,22 @@ function render() {
     const dayGridBox = document.createElement("div");
     dayGridBox.classList.add("day-grid-box");
     dayGridBox.textContent = dayNumber;
+    //loop through that list, and for each match, append an element with the day's name
+    for (const commDay of commDaysList) {
+      if (commDay.day === dayNumber) {
+        const dayLabelPara = document.createElement("p");
+        dayLabelPara.textContent = commDay.name;
+        dayGridBox.append(dayLabelPara);
+      }
+    }
     calendarGrid.append(dayGridBox);
+  }
+
+  // Add one blank box per empty slot after last day
+  for (let i = 0; i < blanksAfter; i++) {
+    const blankGridBox = document.createElement("div");
+    blankGridBox.classList.add("blank-grid-box");
+    calendarGrid.append(blankGridBox);
   }
 }
 
@@ -125,19 +136,14 @@ function handleMonthChange() {
 // Year box: jump to the typed year, but only if it's a valid year.
 function handleYearChange() {
   // Read what was typed (text) and convert it to a number and save
-  const newYearInput = Number(yearInput.value);
+  const newYear = Number(yearInput.value);
 
-  // Valid = a whole number from 100 to 9999.
-  // (Years 0–99 are avoided because new Date() treats them as 1900–1999.)
-  if (
-    Number.isInteger(newYearInput) &&
-    Number(newYearInput) >= 100 &&
-    Number(newYearInput) <= 9999
-  ) {
-    setState({ year: newYearInput });
+  // Valid = a whole number from 1 to 9999.
+  if (Number.isInteger(newYear) && newYear >= 1 && newYear <= 9999) {
+    setState({ year: newYear });
   } else {
     render();
-    alert("Please enter a valid year between 100 and 9999.");
+    alert("Please enter a valid year between 1 and 9999.");
   }
 }
 
