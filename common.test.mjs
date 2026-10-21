@@ -67,7 +67,7 @@ test("Ada Lovelace Day falls on 13 October 2020", () => {
 // Test that International Binturong Day is calculated correctly in 2030.
 test("International Binturong Day falls on 11 May 2030", () => {
   const binturong = daysData.find(
-    (day) => day.name === "International Binturong Day"
+    (day) => day.name === "International Binturong Day",
   );
 
   const date = getCommemorativeDate(binturong, 2030);
@@ -88,4 +88,19 @@ test("World Lemur Day falls on 31 October 2025", () => {
   assert.equal(date.getMonth(), 9); // October
   assert.equal(date.getDate(), 31);
   assert.equal(date.getDay(), 5); // Friday
+});
+
+// test an arbitrary 4th occurrence
+// Feb 2026 starts on a Sun, so the fourth Sat is the 28th
+test("Fourth Sat of Feb 2026 is the 28th", () => {
+  //made up day
+  const testDay = {
+    name: "Test",
+    monthName: "February",
+    dayName: "Saturday",
+    occurrence: "fourth",
+  };
+  const date = getCommemorativeDate(testDay, 2026);
+
+  assert.equal(date.toDateString(), "Sat Feb 28 2026");
 });

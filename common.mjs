@@ -79,11 +79,12 @@ export function getCommemorativeDate(day, year) {
     return createDate(year, monthIndex, lastDate - daysToSubtract);
   }
 
-  // Handle first, second and third occurrences.
+  // Handle first, second and third, and fourth occurrences.
   const occurrenceNumbers = {
     first: 1,
     second: 2,
     third: 3,
+    fourth: 4,
   };
 
   const occurrenceNumber = occurrenceNumbers[day.occurrence];
