@@ -2,6 +2,18 @@
 
 This document explains how the Days Calendar project was tested against the project requirements.
 
+## 0. Opens on the current month
+
+**Requirement:** The calendar shows the current month when the page loads.
+
+**How it was tested:**
+
+- Opened the website and checked that the heading, the month dropdown and the year all showed the current month and year
+
+**Expected result:** The current year and month are displayed
+
+**Result:** The calendar opened on the current year and month.
+
 ## 1. Commemorative-Day Date Calculations
 
 **Requirement:** Calculate commemorative dates correctly for different years, including days defined by their occurrence in a month.
@@ -27,12 +39,18 @@ This document explains how the Days Calendar project was tested against the proj
 
 **How it was tested:**
 
-- Opened the website in a browser.
-- Checked the weekday headings and date alignment.
-- Checked the blank cells before the first date and after the last date.
-- Ran unit tests for calendar helper functions, including the number of blank cells before a month and the number of days in a month.
+- Opened the website and checked the weekday headings start with Sunday.
+- Checked the empty boxes before and after each month, using the four rubric months:
+  - December 2024: 0 before, 4 after
+  - February 2025: 6 before, 1 after
+  - May 2025: 4 before, 0 after
+  - February 2026: 0 before, 0 after
+- Checked October 2024 is 5 rows of 7, with the 1st on a Tuesday and the 31st on a Thursday.
+- Unit tests for the blank-box counts and month lengths are in `calendar.test.mjs`.
 
 **Expected result:** Dates appear under the correct weekday, and the calendar grid is aligned correctly.
+
+**Result:** All four rubric months and October 2024 matched the expected blank boxes and rows.
 
 ## 3. Previous and Next Month Navigation
 
@@ -43,8 +61,11 @@ This document explains how the Days Calendar project was tested against the proj
 - Used the previous-month and next-month controls in the browser.
 - Checked that the displayed month and year changed correctly.
 - Checked navigation across a year boundary, such as December to January.
+- Clicked through many months in both directions and checked the heading or dropdown never showed "NaN" or "undefined" or "null"
 
 **Expected result:** Navigation displays the correct month and year, including across year boundaries.
+
+**Result:** Navigation worked in both directions across year starts and ends with no "NaN", "undefined" or "null" shown.
 
 ## 4. Month and Year Selection
 
@@ -55,9 +76,14 @@ This document explains how the Days Calendar project was tested against the proj
 - Used the month selector and year input.
 - Selected different months and years.
 - Checked that the calendar displayed the selected month and year.
-- Checked support for years outside the usual current range.
+- Checked years such as 1900 and 2050 by typing them into the year box.
+- Typed invalid years (2030.5, an empty box, 0, 10000) and checked the alert appeared and the year re-set to current.
+- Checked that the Previous and Next buttons are not limited by ths range. - they continue past 9999 December and before the year 1, Jan; and the heading and dropdown displays correctly without "NaN", "undefined" or "Null"
 
 **Expected result:** The calendar recalculates its dates and layout for the selected month and year.
+**Note**: the 1 to 9999 limit applies only to the typed years. The nav buttons are deliberately unrestricted, as the rubric requires them to work on every month.
+
+**Result:** The calendar jumped to the chosen month and year, and invalid typed years were met with an alert rejection.
 
 ## 5. Display of Commemorative Days
 
@@ -72,6 +98,8 @@ This document explains how the Days Calendar project was tested against the proj
 
 **Expected result:** Commemorative days appear on their calculated dates without incorrect dates being displayed.
 
+**Result:** Commemorative days appeared on the expected dates in October 2024, October 2020 and May 2030.
+
 ## 6. Data-Driven Calendar
 
 **Requirement:** Calculate dates from the supplied data and reusable logic rather than hard-coding dates for individual years.
@@ -81,20 +109,28 @@ This document explains how the Days Calendar project was tested against the proj
 - Reviewed the date-calculation functions and calendar code.
 - Checked that the calculations use the commemorative-day data, selected year and selected month.
 - Ran tests covering multiple years, including 2020, 2024, 2025, 2026 and 2030, as well as a year-below-100 edge case.
+- Added a test using a made-up day (fourth Saturday of February 2026) that is not in `days.json`, to check the date logic works for any rule, not just the supplied days. See `common.test.mjs`.
+- Reviewed `web.mjs`, which builds every box with `createElement` and `append`, and gets its days from `days.json` through `common.mjs`, so nothing is hard-coded.
+- Checked that only fixed page structure (headings, buttons, month options, weekday names) is in `index.html`. The days grid and all commemorative days are created in `web.mjs` using `createElement`.
 
 **Expected result:** The same reusable logic calculates commemorative dates for different years.
+
+**Result:** The date logic worked for days not in `days.json`. The grid and commemorative days are generated by JavaScript from the data and the shared functions, so nothing about specific days is hard-coded.
 
 ## 7. Unit Tests
 
 **Requirement:** Include at least one unit test.
 
-**How it was tested:** Unit tests in `common.test.mjs`.
+**How it was tested:** Unit tests in `common.test.mjs` and `calendar.test.mjs`
 
-Ran `npm test` from the project directory to execute the automated tests. The tests check commemorative-day date calculations, occurrence-based dates, edge cases and calendar helper functions.
+Ran `npm test` from the project directory, which runs both test files.
+
+- `common.test.mjs` checks the commemorative-day date calculations: occurrence-based dates (second, fourth and last weekday), multiple years including 2020, 2024, 2025 and 2030, a month with no commemorative days, and a year below 100.
+- `calendar.test.mjs` checks the calendar grid helper functions: the number of blank boxes before the 1st and after the last day, the number of days in a month (including leap-year February), and a year below 100.
 
 **Expected result:** All automated tests pass.
 
-**Result:** The automated test suite passed after the latest merged changes.
+**Result:** All tests in both files passed after the latest merged changes.
 
 ## 8. iCalendar Generation
 
@@ -112,7 +148,20 @@ Ran `npm test` from the project directory to execute the automated tests. The te
 
 **Result:** The generator ran successfully and produced 55 event entries.
 
-## 9. Google Calendar Import
+## 9. Shared Date Logic
+
+**Requirement:** The website and the iCalendar generator use the same date-calculation code.
+
+**How it was tested:**
+
+- Checked that `web.mjs` and `generate-ical.mjs` both import from `common.mjs`.
+- Compared dates in `days.ics` with the website, for example Ada Lovelace Day on 8 October 2024.
+
+**Expected result:** Both produce the same dates.
+
+**Result:** The dates matched.
+
+## 10. Google Calendar Import
 
 **Requirement:** Verify that the generated iCalendar file can be imported into Google Calendar and that event dates are correct.
 
@@ -129,23 +178,35 @@ Ran `npm test` from the project directory to execute the automated tests. The te
 
 **Result:** The file was imported, and the listed dates were checked.
 
-## 10. Accessibility
+## 11. Accessibility
 
 **Requirement:** Achieve a Lighthouse accessibility score of 100% for all calendar views.
 
-**How it should be tested:**
+**How it was tested:**
 
-- Open the website in Chrome.
-- Open Developer Tools and select Lighthouse.
+- Opened the website in Chrome.
+- Opened Developer Tools and select Lighthouse.
 - Run an audit with Accessibility selected.
-- Repeat the audit on different calendar views, including months with and without commemorative days.
-- Check and fix any reported accessibility issues, then run the audits again.
+- Repeated the audit on different calendar views, including months with and without commemorative days.
 
 **Expected result:** Lighthouse reports an accessibility score of 100% for every tested view.
 
-**Result:** Record the actual scores after completing the audits. This requirement should only be marked as passed when all required views score 100%.
+**Result:** Lighthouse (Snapshot, Desktop) scored 11/11 (100%) accessibility on the current month, October 2024 and February 2025. Keyboard navigation with Tab also worked.
 
-## 11. Final Regression Testing
+## 12. No Dead Code
+
+**Requirement:** All JavaScript and CSS must be used.
+
+**How it was tested:**
+
+- Read through every JavaScript and CSS file, checking each function, class and rule is used.
+- Removed the starter placeholder and leftover comments.
+
+**Expected result:** No unused or commented-out code remains.
+
+**Result:** No dead code was found in the final review.
+
+## 13. Final Regression Testing
 
 **How it was tested:**
 
@@ -156,3 +217,5 @@ Ran `npm test` from the project directory to execute the automated tests. The te
 5. Check month navigation, month/year selection, calendar alignment and commemorative-day display.
 
 **Expected result:** Automated tests pass, the iCalendar file is generated correctly, and the calendar features continue to work.
+
+**Result:** All steps were repeated on the deployed site after the final merge, and everything worked.
