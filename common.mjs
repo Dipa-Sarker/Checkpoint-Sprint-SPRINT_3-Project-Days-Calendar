@@ -30,19 +30,17 @@ function getWeekdayNumber(dayName) {
   return weekdays.indexOf(dayName);
 }
 
-// changing how date is created, since with new Date(), years 0-99 is treated as 1900-1999
+// Create a date for any year, not using new Date() as it treats years 0-99 as 1900-1999
 export function createDate(year, monthIndex, day) {
   const date = new Date(2026, 9, 26);
+  //setFullYear replaces this random date:
   date.setFullYear(year, monthIndex, day);
   return date;
 }
 
 // Calculate the date of one commemorative day in a given year.
 export function getCommemorativeDate(day, year) {
-  // Find the month number.
   const monthIndex = monthNames.indexOf(day.monthName);
-
-  // Find the weekday number.
   const weekdayNumber = getWeekdayNumber(day.dayName);
 
   // Check that the supplied information is valid.
@@ -79,7 +77,6 @@ export function getCommemorativeDate(day, year) {
     return createDate(year, monthIndex, lastDate - daysToSubtract);
   }
 
-  // Handle first, second and third, and fourth occurrences.
   const occurrenceNumbers = {
     first: 1,
     second: 2,
@@ -109,10 +106,8 @@ export function getCommemorativeDate(day, year) {
  */
 
 export function getCommemorativeDaysForMonth(daysData, year, monthIndex) {
-  // Create an empty array to store the matching commemorative days.
   const result = [];
 
-  // Go through each commemorative day in the data.
   for (const day of daysData) {
     // Find the month index for this commemorative day.
     const dayMonthIndex = monthNames.indexOf(day.monthName);
@@ -132,6 +127,5 @@ export function getCommemorativeDaysForMonth(daysData, year, monthIndex) {
     });
   }
 
-  // Return all commemorative days found in the requested month.
   return result;
 }
