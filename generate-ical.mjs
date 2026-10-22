@@ -45,7 +45,6 @@ function createICalEvent(day, year, date) {
   ].join("\r\n");
 }
 
-// Store all generated calendar events.
 const events = [];
 
 // Generate an event for every commemorative day from 2020 to 2030.

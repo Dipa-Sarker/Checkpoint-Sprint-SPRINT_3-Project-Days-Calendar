@@ -27,7 +27,7 @@ const nextMonthBtn = document.getElementById("next-month-btn");
 // Starts as today's month and year, only changed with setState()
 let state = {
   month: new Date().getMonth(), // 0–11 - Eg: 9  = October
-  year: new Date().getFullYear(), // 4-digit year - Eg: 2026
+  year: new Date().getFullYear(), // Full year - Eg: 2026
 };
 
 //=============================================================
@@ -47,7 +47,7 @@ function render() {
   monthYearHeading.textContent = `${monthNames[state.month]} ${state.year}`;
 
   // 2. Dropdown: select the <option> whose value matches state.month
-  monthSelect.value = state.month; // state.month starts as the CURRENT month
+  monthSelect.value = state.month; // select the option matching the month being shown
 
   // 3. Year box: show the year from state
   //    Also "resets" the box if the user typed something invalid
